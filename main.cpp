@@ -23,9 +23,9 @@ bool presenceFile(std::string path)
 	}
 }
 
-int getFileSize(const std::string& fileName)
+int getFileSize(const std::string& path)
 {
-	std::ifstream file(fileName.c_str(), std::ifstream::in | std::ifstream::binary);
+	std::ifstream file(path.c_str(), std::ifstream::in | std::ifstream::binary);
 
 	if (!file.is_open())
 	{
@@ -62,9 +62,25 @@ bool getInjectionCode(std::string path)
 	return true;
 }
 
-void deleteInjection()
+bool deleteInjection(const std::string& path)
 {
+	std::string ourCode{ "module.exports = require('./core.asar');" };
+	std::fstream file;
 
+	file.open(path + "index.js", std::ios::out | std::ifstream::binary);
+
+	if (!file) {
+		std::cout << "Le fichier n'a pas pu etre reparer\n";
+		return false;
+	}
+
+	if (file << ourCode << std::endl) {
+		file.close();
+		return true;
+	} else {
+		std::cout << "Le fichier n'a pas pu etre reparer\n";
+		return false;
+	}
 }
 
 int main()
@@ -80,8 +96,12 @@ int main()
 				std::cout << "Le fichier est modifier.\n";
 				if (getInjectionCode(PATH)) {
 					std::cout << "Le code est sauvegarder...\n";
-
-					return 0;
+					if (deleteInjection(PATH)) {
+						std::cout << "L'injection est retirer...\n";
+						return 0;
+					} else {
+						return EXIT_FAILURE;
+					}
 				} else {
 					return EXIT_FAILURE;
 				}
