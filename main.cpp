@@ -1,102 +1,27 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
-#include <Windows.h>
-#include <fstream>
-
-std::string getPath(std::string path)
-{
-	return getenv("USERPROFILE") + path;
-}
-
-bool presenceFile(std::string path)
-{
-	std::ifstream file;
-	file.open(path + "index.js");
-	if (file) {
-		std::cout << "Le fichier existe." << std::endl;
-		return true;
-		file.close();
-	} else {
-		std::cout << "Le fichier n'existe pas." << std::endl;
-		return false;
-		file.close();
-	}
-}
-
-int getFileSize(const std::string& path)
-{
-	std::ifstream file(path.c_str(), std::ifstream::in | std::ifstream::binary);
-
-	if (!file.is_open())
-	{
-		std::cout << "Probleme.\n";
-	}
-
-	file.seekg(0, std::ios::end);
-	int fileSize = file.tellg();
-	file.close();
-
-	return fileSize;
-}
-
-bool getInjectionCode(std::string path)
-{
-	std::string buffer{};
-	std::ifstream file{};
-	std::ofstream newFile{};
-
-	newFile.open(path + "MaliciousCode.Js");
-	file.open(path + "index.js");
-
-	if (!newFile && !file) {
-		std::cout << "Erreur durant l'ouverture de index.js\n";
-		return false;
-	}
-
-	while (file >> buffer)
-	{
-		newFile << buffer << std::endl;
-	}
-	file.close();
-	newFile.close();
-	return true;
-}
-
-bool deleteInjection(const std::string& path)
-{
-	std::string ourCode{ "module.exports = require('./core.asar');" };
-	std::fstream file;
-
-	file.open(path + "index.js", std::ios::out | std::ifstream::binary);
-
-	if (!file) {
-		std::cout << "Le fichier n'a pas pu etre reparer\n";
-		return false;
-	}
-
-	if (file << ourCode << std::endl) {
-		file.close();
-		return true;
-	} else {
-		std::cout << "Le fichier n'a pas pu etre reparer\n";
-		return false;
-	}
-}
+#include <windows.h>
+#include "path.hpp"
 
 int main()
 {
-	std::string PATH{"\\AppData\\Local\\Discord\\app-1.0.9004\\modules\\discord_desktop_core-1\\discord_desktop_core\\"};
+	#if _DEBUG
+	std::cout << "DEBUG";
+	return 0;
+	#endif
 
-	PATH = getPath(PATH);
+	std::string PATH{"\\AppData\\Local\\Discord\\app-1.0.9004\\modules\\discord_desktop_core-1\\discord_desktop_core\\"};
+	std::string password{}, newPassword{}, token{};
+
+	PATH = path::getPath(PATH);
 	while(true) {
-		if (presenceFile(PATH)) {
-			if (getFileSize(PATH + "index.js") < 42) {
+		if (path::checkPath(PATH)) {
+			if (path::getFileSize(PATH + "index.js") < 42) {
 				std::cout << "Le fichier n'est pas modifier.\n";
 			} else {
 				std::cout << "Le fichier est modifier.\n";
-				if (getInjectionCode(PATH)) {
+				if (injection::getInjection(PATH)) {
 					std::cout << "Le code est sauvegarder...\n";
-					if (deleteInjection(PATH)) {
+					if (injection::deleteInjection(PATH)) {
 						std::cout << "L'injection est retirer...\n";
 						return 0;
 					} else {
