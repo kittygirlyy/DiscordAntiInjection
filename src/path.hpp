@@ -62,15 +62,15 @@ namespace path
 
 	bool checkPath(std::string path)
 	{
-		std::ifstream file;
+		std::ifstream file{};
 		file.open(path + "index.js");
 		if (file) {
-			std::cout << "Le fichier existe." << std::endl;
+			std::cout << "[V] Le fichier existe." << std::endl;
 			return true;
 			file.close();
 		}
 		else {
-			std::cout << "Le fichier n'existe pas." << std::endl;
+			std::cout << "[X] Le fichier n'existe pas." << std::endl;
 			return false;
 			file.close();
 		}
