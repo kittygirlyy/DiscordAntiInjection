@@ -1,7 +1,6 @@
 #include <iostream>
 #include <windows.h>
 #include "path.hpp"
-#include "discordRequest.hpp"
 
 void DEBUG()
 {
