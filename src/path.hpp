@@ -5,9 +5,10 @@
 #ifndef PATH_HPP
 #define PATH_HPP
 
+
 namespace injection
 {
-	bool getInjection(std::string path)
+	bool getInjection(const std::string& path)
 	{
 		std::string buffer{};
 		std::ifstream file{};
@@ -55,12 +56,12 @@ namespace injection
 
 namespace path
 {
-	std::string getPath(std::string path)
+	std::string getPath(const std::string& path)
 	{
 		return getenv("USERPROFILE") + path;
 	}
 
-	bool checkPath(std::string path)
+	bool checkPath(const std::string& path)
 	{
 		std::ifstream file{};
 		file.open(path + "index.js");
